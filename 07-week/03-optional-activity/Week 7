@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmaExpres - Week 6 Stakeholder Update</title>
+  <style>
+    :root {
+      --bg: #f3f8f6;
+      --paper: #ffffff;
+      --ink: #17353d;
+      --muted: #4f6870;
+      --line: #d7e3df;
+      --brand: #0f766a;
+      --brand-2: #155e75;
+      --ok: #1e824c;
+      --risk: #b45309;
+      --next: #1d4ed8;
+      --shadow: 0 14px 32px rgba(18, 42, 48, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 6%, #e5faf3 0%, transparent 28%),
+        radial-gradient(circle at 92% 0%, #e8f1ff 0%, transparent 24%),
+        var(--bg);
+    }
+
+    .wrap {
+      width: min(1120px, 100% - 28px);
+      margin: 28px auto 48px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(125deg, #0f766a 0%, #115e59 45%, #1d4ed8 100%);
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero small {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.92;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+      line-height: 1.15;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.28rem;
+      color: #124d58;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.04rem;
+      color: #153d46;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.52;
+    }
+
+    .chips {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.14);
+      padding: 7px 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fbfefc;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .ok {
+      background: var(--ok);
+    }
+
+    .risk {
+      background: var(--risk);
+    }
+
+    .next {
+      background: var(--next);
+    }
+
+    ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+
+    .focus li {
+      margin-bottom: 8px;
+    }
+
+    .value-box {
+      border-left: 5px solid #0f766a;
+      background: #eef9f5;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .footer {
+      font-size: 0.86rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        width: min(1120px, 100% - 18px);
+        margin-top: 18px;
+      }
+
+      .hero,
+      .section {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <small>FarmaExpres | Week 6 | Stakeholder Report</small>
+      <h1>Avance claro del producto: lo logrado, lo pendiente y lo que sigue</h1>
+      <p>
+        Esta semana enfocamos el trabajo en consolidar microservicios, ordenar el frontend por modulos
+        y preparar una base mas fuerte para escalar el producto sin perder claridad operativa.
+      </p>
+      <div class="chips">
+        <span class="chip">Backend + Frontend + QA</span>
+        <span class="chip">Enfoque en valor de negocio</span>
+        <span class="chip">Lenguaje simple para decision</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Contexto de la aplicacion (segun FarmaExpres)</h2>
+      <p>
+        FarmaExpres digitaliza la operacion de una farmacia de una sola sede.
+        El sistema resuelve problemas reales: control de inventario, vencimientos, movimientos y permisos por rol.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <h3>Problema que resuelve</h3>
+          <ul>
+            <li>Evitar perdidas por medicamentos vencidos.</li>
+            <li>Reducir errores de registro manual.</li>
+            <li>Tener trazabilidad de entradas y salidas.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Como lo resuelve</h3>
+          <ul>
+            <li>Arquitectura por microservicios desacoplados.</li>
+            <li>Portal web por modulos y por roles.</li>
+            <li>Control de autenticacion, inventario y auditoria.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Impacto esperado</h3>
+          <ul>
+            <li>Mas control operativo diario.</li>
+            <li>Mejor toma de decisiones administrativas.</li>
+            <li>Escalabilidad para siguientes etapas.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Base de Week 5 (solo ADR con mejor resultado)</h2>
+      <p>Para Week 6 solo tomamos la base de mayor impacto, sin cargar todo el detalle de Week 5:</p>
+      <ul class="focus">
+        <li><strong>ADR-017:</strong> respuestas HTTP mas consistentes para clientes y soporte.</li>
+        <li><strong>ADR-018:</strong> rutas de productos activos mas estables sin romper integraciones.</li>
+        <li><strong>ADR-019:</strong> manejo controlado de JWT invalido (menos fallos 500).</li>
+        <li><strong>ADR-007 + ADR-012:</strong> mejor observabilidad y chequeo simple de estado.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>1) Que se logro en Week 6</h2>
+      <div class="grid">
+        <article class="card">
+          <span class="badge ok">Logrado</span>
+          <h3>Back-end mas ordenado y claro</h3>
+          <ul>
+            <li>Migracion progresiva de nombres y componentes a ingles.</li>
+            <li>Documentacion de microservicios clave (`auth-service` e `inventory-service`).</li>
+            <li>Nuevos ajustes de roles y permisos, incluyendo rol auditor.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge ok">Logrado</span>
+          <h3>Frontend con base real de producto</h3>
+          <ul>
+            <li>Estructura modular por dominio para crecer sin desorden.</li>
+            <li>Maquetacion base por modulos y por roles.</li>
+            <li>HU implementadas: FE-01, FE-03, FE-04, FE-05 y FE-06.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge ok">Logrado</span>
+          <h3>Mejor trazabilidad del trabajo</h3>
+          <ul>
+            <li>Documentacion QA por historia de usuario con evidencias.</li>
+            <li>Mayor alineacion entre layout, reglas funcionales y backend.</li>
+            <li>Demo visual util para explicar avance a no tecnicos.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2) Que no se logro todavia</h2>
+      <div class="grid">
+        <article class="card">
+          <span class="badge risk">Pendiente</span>
+          <h3>Integracion y permisos de extremo a extremo</h3>
+          <ul>
+            <li>Faltan validaciones completas despues de cambios en roles.</li>
+            <li>Ajuste final de autenticacion/autorizacion entre servicios.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge risk">Pendiente</span>
+          <h3>Historias frontend claves por cerrar</h3>
+          <ul>
+            <li>HU-FE-02 (login formal completo).</li>
+            <li>HU-FE-07 y HU-FE-08 (movimientos e inventario avanzado).</li>
+            <li>HU-FE-09 y HU-FE-10 pasan a fase siguiente.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge risk">Pendiente</span>
+          <h3>Documentacion tecnica de otros servicios</h3>
+          <ul>
+            <li>Falta ampliar documentacion fuera de los 4 HU de backend priorizados.</li>
+            <li>Se requiere mayor cobertura para facilitar onboarding tecnico.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3) Que se va a hacer ahora</h2>
+      <div class="grid">
+        <article class="card">
+          <span class="badge next">Siguiente paso</span>
+          <h3>Consolidar flujo de acceso</h3>
+          <ul>
+            <li>Completar HU-FE-02 con manejo de sesion/token.</li>
+            <li>Asegurar navegacion por permisos de rol desde frontend.</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge next">Siguiente paso</span>
+          <h3>Cerrar operacion de inventario</h3>
+          <ul>
+            <li>Implementar HU-FE-07 (historial con filtros por fecha/tipo/usuario).</li>
+            <li>Implementar HU-FE-08 (stock inteligente y alerta de criticidad).</li>
+          </ul>
+        </article>
+        <article class="card">
+          <span class="badge next">Siguiente paso</span>
+          <h3>Reducir riesgo para salida</h3>
+          <ul>
+            <li>Pruebas de integracion sobre autenticacion e inventario.</li>
+            <li>Ajustes de documentacion tecnica pendiente.</li>
+            <li>Preparar siguiente fase con HU-FE-09 y HU-FE-10.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Mensaje para stakeholder</h2>
+      <div class="value-box">
+        <p>
+          El producto ya muestra una base funcional y ordenada para operar en contexto real de farmacia.
+          Week 6 no fue solo avance tecnico: se dejo una estructura que reduce riesgo, mejora control de inventario
+          y prepara una evolucion mas rapida en las siguientes iteraciones.
+        </p>
+        <p>
+          La siguiente etapa se enfoca en cerrar autenticacion completa y trazabilidad operativa, dos puntos claves
+          para una experiencia confiable de negocio.
+        </p>
+      </div>
+    </section>
+
+    <p class="footer">
+      Fuente de contexto: README de FarmaExpres + avances reportados en Weeks-6.
+    </p>
+  </main>
+</body>
+</html>
