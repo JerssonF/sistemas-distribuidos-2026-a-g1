@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmaExpres - Resumen ADR Week 5</title>
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --paper: #ffffff;
+      --ink: #1f2a30;
+      --muted: #5d6a72;
+      --line: #e7dfd2;
+      --brand: #0f6b5c;
+      --warn: #c87b1f;
+      --bad: #b03a2e;
+      --good: #1e824c;
+      --shadow: 0 10px 30px rgba(18, 38, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 10%, #eef9f5 0%, transparent 35%),
+        radial-gradient(circle at 85% 0%, #fff3e6 0%, transparent 28%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 18px 50px;
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #0f6b5c 0%, #0a4f59 55%, #1b3f5f 100%);
+      color: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero small {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.92;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+      line-height: 1.15;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+      color: #0e4f5a;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fffefa;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .ok {
+      background: #eaf8ef;
+      color: var(--good);
+    }
+
+    .risk {
+      background: #fff1ef;
+      color: var(--bad);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.45;
+    }
+
+    .moscow {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    .lane.must h3 { color: var(--good); }
+    .lane.should h3 { color: #1a6e95; }
+    .lane.could h3 { color: var(--warn); }
+    .lane.wont h3 { color: #7f8c8d; }
+
+    .team {
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .cta {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fff7ee 0%, #f4fbf7 100%);
+      border: 1px solid #ebdfcf;
+    }
+
+    footer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <small>FarmaExpres | Week 5</small>
+      <h1>Resumen claro de ADR para stakeholder</h1>
+      <p>
+        Este reporte explica en lenguaje simple lo que ya se construyo,
+        lo que todavia falta y el plan inmediato para cerrar brechas.
+      </p>
+      <div class="chips">
+        <span class="chip">20 ADR trabajados por el equipo</span>
+        <span class="chip">10 decisiones ya aplicadas</span>
+        <span class="chip">10 decisiones en cierre</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1) Que se hizo?</h2>
+      <p>Lo que ya esta funcionando y aporta valor real al producto:</p>
+      <div class="grid">
+        <article class="card">
+          <span class="status ok">Logrado</span>
+          <h3>Entrada unica y ordenada</h3>
+          <ul>
+            <li>El API Gateway ya esta integrado como puerta principal.</li>
+            <li>Las rutas ya estan unificadas con prefijo <strong>/api</strong>.</li>
+          </ul>
+          <p class="team">ADRs: 002, 003</p>
+        </article>
+
+        <article class="card">
+          <span class="status ok">Logrado</span>
+          <h3>Mejor experiencia para clientes</h3>
+          <ul>
+            <li>Respuestas y errores mas consistentes entre servicios.</li>
+            <li>Codigos HTTP mas claros (201 al crear, 204 al eliminar).</li>
+          </ul>
+          <p class="team">ADRs: 005, 006, 015, 017</p>
+        </article>
+
+        <article class="card">
+          <span class="status ok">Logrado</span>
+          <h3>Operacion mas confiable</h3>
+          <ul>
+            <li>Endpoint <strong>/status</strong> en gateway y microservicios.</li>
+            <li>Monitoreo basico con health/info activo.</li>
+          </ul>
+          <p class="team">ADRs: 007, 012</p>
+        </article>
+
+        <article class="card">
+          <span class="status ok">Logrado</span>
+          <h3>Continuidad sin romper clientes</h3>
+          <ul>
+            <li>Ruta canonica de productos activos con alias temporal.</li>
+            <li>Token invalido ya responde 401 en vez de error 500.</li>
+          </ul>
+          <p class="team">ADRs: 018, 019</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2) Que no se logro todavia?</h2>
+      <p>Puntos pendientes que hoy limitan escalabilidad, seguridad o claridad:</p>
+      <div class="grid">
+        <article class="card">
+          <span class="status risk">Pendiente critico</span>
+          <h3>Secretos aun en codigo</h3>
+          <p>
+            Aunque ya se usan variables en configuracion, el secreto JWT sigue
+            hardcodeado en servicios clave.
+          </p>
+          <p class="team">ADRs: 001, 016</p>
+        </article>
+
+        <article class="card">
+          <span class="status risk">Pendiente critico</span>
+          <h3>Gateway no es 100% obligatorio</h3>
+          <p>
+            Aun hay puertos de microservicios expuestos hacia afuera, por lo que
+            se puede entrar sin pasar por el gateway.
+          </p>
+          <p class="team">ADR: 010</p>
+        </article>
+
+        <article class="card">
+          <span class="status risk">Pendiente</span>
+          <h3>Calidad de entrada de datos</h3>
+          <p>
+            Falta aplicar validacion minima en DTO para evitar datos nulos o
+            vacios desde el primer contacto.
+          </p>
+          <p class="team">ADR: 014</p>
+        </article>
+
+        <article class="card">
+          <span class="status risk">Pendiente</span>
+          <h3>Cierre de estandares operativos</h3>
+          <p>
+            Falta cerrar documentacion OpenAPI/versionado, pruebas QA minimas
+            obligatorias y configuracion por ambiente de logging/puerto.
+          </p>
+          <p class="team">ADRs: 008, 009, 011, 013, 020 (y parte de 004)</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3) Que se va a hacer? (MoSCoW)</h2>
+      <div class="moscow">
+        <article class="lane must">
+          <h3>Must Have</h3>
+          <ul>
+            <li>Quitar secretos hardcodeados del JWT.</li>
+            <li>Cerrar acceso externo directo a microservicios.</li>
+            <li>Agregar validacion minima de datos en DTO.</li>
+            <li>Automatizar suite QA minima antes de merge.</li>
+          </ul>
+        </article>
+
+        <article class="lane should">
+          <h3>Should Have</h3>
+          <ul>
+            <li>Documentacion OpenAPI y politica de versionado.</li>
+            <li>Puerto configurable por entorno.</li>
+            <li>CORS explicito y logging por ambiente.</li>
+          </ul>
+        </article>
+
+        <article class="lane could">
+          <h3>Could Have</h3>
+          <ul>
+            <li>Dashboard simple de salud por servicio.</li>
+            <li>Mensajes de error mas orientados a negocio.</li>
+            <li>Resumen de metricas de calidad por sprint.</li>
+          </ul>
+        </article>
+
+        <article class="lane wont">
+          <h3>Won't Have (esta semana)</h3>
+          <ul>
+            <li>Re-arquitectura grande del sistema completo.</li>
+            <li>Migraciones profundas no ligadas al valor inmediato.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Aporte de los companeros (ADRs)</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Rol Backend</h3>
+          <p class="team">ADRs 001-005: base de seguridad, gateway y contratos API.</p>
+        </article>
+        <article class="card">
+          <h3>Rol Frontend</h3>
+          <p class="team">ADRs 006-010: errores consistentes, monitoreo y entrada por gateway.</p>
+        </article>
+        <article class="card">
+          <h3>Rol QA</h3>
+          <p class="team">ADRs 011-015: logging, status, validacion y manejo de excepciones.</p>
+        </article>
+        <article class="card">
+          <h3>Backend + QA</h3>
+          <p class="team">ADRs 016-020: cierre de seguridad JWT, rutas, HTTP y pruebas minimas.</p>
+        </article>
+      </div>
+
+      <div class="cta">
+        <h3>Mensaje para stakeholder</h3>
+        <p>
+          El producto ya tiene una base funcional y coherente para crecer.
+          Lo pendiente esta identificado, priorizado y con ruta clara de ejecucion
+          para el siguiente sprint.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      Fuente: analisis de ADR-001 a ADR-020 y estado actual del codigo en Week 5.
+    </footer>
+  </div>
+</body>
+</html>
