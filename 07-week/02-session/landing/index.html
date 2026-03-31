@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 7: DDD, ADR y Arquitectura por Escenarios</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="top-bar">
+            <div class="container brand-container">
+                <span class="brand-name">MATERIAL DE SISTEMAS DISTRIBUIDOS</span><br>
+                <span class="brand-name">Semana 7: DDD, ADR, API Gateway y Kubernetes</span>
+            </div>
+            <div class="environment-badge" id="environmentBadge">Front en modo local</div>
+        </div>
+        <nav class="main-nav">
+            <div class="container nav-shell">
+                <a href="#inicio" class="nav-title">Demo guiada por tabs</a>
+                <a href="#accesos" class="nav-link">Accesos rapidos</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container main-content">
+        <section id="inicio" class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow">Arquitectura explicada sin mezclar conceptos</p>
+                <h1>DDD, ADR, organizacion del codigo y despliegue por ambientes</h1>
+                <p class="lead">
+                    Esta landing organiza cada tema en un tab independiente para que se entienda
+                    cuando conviene trabajar todo en un solo proyecto, cuando conviene agrupar por modulo
+                    y cuando tiene sentido separar en microservicios con API Gateway y Kubernetes.
+                </p>
+            </div>
+            <div class="hero-status">
+                <div class="status-card">
+                    <span class="status-label">Ambiente actual del front</span>
+                    <strong id="currentEnvironment">Detectando...</strong>
+                    <span id="currentPort">Puerto no detectado</span>
+                </div>
+                <div class="status-card">
+                    <span class="status-label">Contextos del dominio</span>
+                    <strong>Seguridad, Venta, Inventario</strong>
+                    <span>Separados para mejorar cohesion</span>
+                </div>
+                <div class="status-card">
+                    <span class="status-label">Ramas por repo</span>
+                    <strong>develop, qa, main</strong>
+                    <span>El mismo mapa se replica en todos los repos</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="overview-grid">
+            <article class="overview-card">
+                <h3>Objetivo de la demo</h3>
+                <p>
+                    No se construye una API funcional. Cada puerto solo muestra una pagina que identifica
+                    con claridad que servicio, repo y ambiente estas visitando.
+                </p>
+            </article>
+            <article class="overview-card">
+                <h3>Escenarios que se comparan</h3>
+                <p>
+                    Se contrasta el enfoque all project por capas, el enfoque by module y la separacion
+                    a microservicios cuando cada modulo evoluciona a su propio repo.
+                </p>
+            </article>
+            <article class="overview-card">
+                <h3>Puente hacia Kubernetes</h3>
+                <p>
+                    La explicacion termina mostrando como mapear ambientes, gateway y microservicios
+                    a namespaces, deployments, services e ingress.
+                </p>
+            </article>
+        </section>
+
+        <section class="resource-strip">
+            <a href="README.md" target="_blank" rel="noreferrer">Guia de ejecucion</a>
+            <a href="docs/adr/0001-organizacion-del-core.md" target="_blank" rel="noreferrer">ADR de ejemplo</a>
+            <a href="k8s/README.md" target="_blank" rel="noreferrer">Documentacion Kubernetes</a>
+            <a href="k8s/reference-architecture.yaml" target="_blank" rel="noreferrer">Manifiesto de referencia</a>
+        </section>
+
+        <section class="tab-shell">
+            <div class="tab-list" role="tablist" aria-label="Temas de arquitectura">
+                <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-ddd" id="btn-ddd">DDD</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-adr" id="btn-adr">ADR</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-all-project" id="btn-all-project">All Project</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-by-module" id="btn-by-module">By Module</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-micro" id="btn-micro">Microservicios</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-gateway" id="btn-gateway">API Gateway</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-ports" id="btn-ports">Puertos</button>
+                <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-kubernetes" id="btn-kubernetes">Kubernetes</button>
+            </div>
+
+            <div class="tab-panels">
+                <section class="tab-panel active" id="tab-ddd" role="tabpanel" aria-labelledby="btn-ddd">
+                    <h2>DDD: dividir el problema por negocio antes de dividir el despliegue</h2>
+                    <p>
+                        Domain-Driven Design ayuda a separar el sistema por contextos de negocio. En esta clase
+                        el core se divide en tres dominios: <strong>Seguridad</strong>, <strong>Venta</strong> e
+                        <strong>Inventario</strong>. Cada uno tiene sus propias entidades, reglas y casos de uso.
+                    </p>
+                    <div class="concept-grid">
+                        <article class="concept-card">
+                            <h3>Seguridad</h3>
+                            <p>Controla autenticacion, autorizacion, tokens JWT, usuarios y permisos.</p>
+                        </article>
+                        <article class="concept-card">
+                            <h3>Venta</h3>
+                            <p>Administra pedidos, pagos, clientes, reglas comerciales y estados de la venta.</p>
+                        </article>
+                        <article class="concept-card">
+                            <h3>Inventario</h3>
+                            <p>Gestiona existencias, catalogo, reservas, disponibilidad y movimientos de stock.</p>
+                        </article>
+                    </div>
+                    <div class="definition-box">
+                        <strong>Idea clave:</strong> primero se separa el lenguaje del negocio; despues se decide si
+                        ese dominio vive en un proyecto unico, en modulos o en microservicios independientes.
+                    </div>
+                    <div class="case-study-section">
+                        <div class="case-header">
+                            <h3>Ejemplo funcional conceptual: Core XYZ</h3>
+                        </div>
+                        <div class="scenario-box">
+                            <p>
+                                Un usuario inicia sesion en <strong>Seguridad</strong>, genera una compra en
+                                <strong>Venta</strong> y finalmente <strong>Inventario</strong> descuenta unidades.
+                                Aunque no se implementa la logica real, la demo representa visualmente ese recorrido.
+                            </p>
+                        </div>
+                        <div class="flow-steps">
+                            <div class="flow-step">1. Login y validacion del token</div>
+                            <div class="flow-step">2. Registro del pedido y validacion comercial</div>
+                            <div class="flow-step">3. Reserva o descuento de stock</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="tab-panel" id="tab-adr" role="tabpanel" aria-labelledby="btn-adr" hidden>
+                    <h2>ADR: documentar por que se tomo una decision de arquitectura</h2>
+                    <p>
+                        Un ADR (Architecture Decision Record) no describe todo el proyecto; solo captura una decision
+                        importante, el contexto, las opciones consideradas y las consecuencias.
+                    </p>
+                    <div class="comparison-cards">
+                        <article class="comparison-card">
+                            <h4>Cuando escribir un ADR</h4>
+                            <ul>
+                                <li>Cuando se cambia la estructura del codigo.</li>
+                                <li>Cuando se decide separar un modulo a otro repo.</li>
+                                <li>Cuando se introduce API Gateway, Kubernetes o nuevas politicas por ambiente.</li>
+                            </ul>
+                        </article>
+                        <article class="comparison-card">
+                            <h4>Que debe responder</h4>
+                            <ul>
+                                <li>Cual era el problema.</li>
+                                <li>Que opciones existian.</li>
+                                <li>Cual opcion se eligio.</li>
+                                <li>Que ganamos y que costo aceptamos.</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="code-box">
+                        <h4>ADR sugerido para esta clase</h4>
+                        <pre><code>Decision: organizar primero por modulo dentro del core
+Motivo: reducir confusion entre Seguridad, Venta e Inventario
+Siguiente paso: separar a microservicios cuando cada modulo lo justifique
+Impacto: mejora la cohesion y facilita desplegar por dominio</code></pre>
+                    </div>
+                    <div class="reflection-box">
+                        <h4>Lectura recomendada</h4>
+                        <p>
+                            En esta demo se incluye un ADR real de ejemplo en
+                            <strong>docs/adr/0001-organizacion-del-core.md</strong>.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="tab-panel" id="tab-all-project" role="tabpanel" aria-labelledby="btn-all-project" hidden>
+                    <h2>Escenario All Project: una sola base de codigo organizada por capas globales</h2>
+                    <p>
+                        En este enfoque todo vive en el mismo proyecto. Primero se agrupan las carpetas por
+                        responsabilidad tecnica y dentro de cada capa aparecen Seguridad, Venta e Inventario.
+                    </p>
+                    <div class="code-box">
+                        <h4>Estructura representada en el resumen</h4>
+                        <pre><code>Entidad/
+  Seguridad/
+  Venta/
+  Inventario/
+Repositorio/
+  Seguridad/
+  Venta/
+  Inventario/
+Servicio/
+  Seguridad/
+  Venta/
+  Inventario/
+Controlador/
+  Seguridad/
+  Venta/
+  Inventario/
+Utils/
+  validations/
+  jwt/</code></pre>
+                    </div>
+                    <div class="comparison-cards">
+                        <article class="comparison-card">
+                            <h4>Ventajas</h4>
+                            <ul>
+                                <li>Es simple de arrancar y de explicar al equipo.</li>
+                                <li>Todo esta en un solo repo con ramas develop, qa y main.</li>
+                                <li>Facilita reutilizar utilidades globales al inicio del proyecto.</li>
+                            </ul>
+                        </article>
+                        <article class="comparison-card">
+                            <h4>Riesgos</h4>
+                            <ul>
+                                <li>La cohesion del dominio se diluye porque una regla de negocio cruza muchas carpetas.</li>
+                                <li>El acoplamiento tecnico crece cuando todos comparten la misma capa global.</li>
+                                <li>Escalar a repos separados cuesta mas porque el dominio no esta encapsulado.</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Lectura del escenario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cohesion</td>
+                                <td>Media. El negocio esta repartido entre muchas carpetas tecnicas.</td>
+                            </tr>
+                            <tr>
+                                <td>Acoplamiento</td>
+                                <td>Alto. Cambiar Venta puede tocar entidades, servicios y controladores mezclados con otros dominios.</td>
+                            </tr>
+                            <tr>
+                                <td>Escenario ideal</td>
+                                <td>Equipos pequenos o proyectos que todavia no necesitan separacion por dominio.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tab-panel" id="tab-by-module" role="tabpanel" aria-labelledby="btn-by-module" hidden>
+                    <h2>Escenario By Module: cada dominio junta sus capas y se vuelve mas entendible</h2>
+                    <p>
+                        Aqui cambia la prioridad. En vez de pensar primero en entidades o servicios globales,
+                        se piensa primero en el modulo de negocio y luego en sus capas internas.
+                    </p>
+                    <div class="code-box">
+                        <h4>Estructura por modulo</h4>
+                        <pre><code>Seguridad/
+  Entidad/
+  Repositorio/
+  Servicio/
+  Controlador/
+  Utils/
+    jwt/
+Venta/
+  Entidad/
+  Repositorio/
+  Servicio/
+  Controlador/
+Inventario/
+  Entidad/
+  Repositorio/
+  Servicio/
+  Controlador/
+Utils/
+  validations/</code></pre>
+                    </div>
+                    <div class="definition-box">
+                        <strong>Lectura de arquitectura:</strong> la carpeta cuenta una historia mas clara.
+                        Si alguien entra al modulo Venta, encuentra casi todo lo que pertenece a ese dominio.
+                    </div>
+                    <div class="comparison-cards">
+                        <article class="comparison-card">
+                            <h4>Por que mejora</h4>
+                            <ul>
+                                <li>Aumenta la cohesion porque el dominio queda junto.</li>
+                                <li>Baja el acoplamiento entre modulos.</li>
+                                <li>Hace mas natural convertir un modulo en otro repo.</li>
+                            </ul>
+                        </article>
+                        <article class="comparison-card">
+                            <h4>Que se cuida</h4>
+                            <ul>
+                                <li>Las utilidades compartidas deben quedarse en una zona comun minima.</li>
+                                <li>No todo helper merece vivir fuera del modulo.</li>
+                                <li>Las validaciones globales deben ser pocas y estables.</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="scenario-grid">
+                        <article class="scenario-card">
+                            <h4>Escenario 1</h4>
+                            <p>Seguridad se puede convertir en un nuevo git sin romper el resto del core.</p>
+                        </article>
+                        <article class="scenario-card">
+                            <h4>Escenario 2</h4>
+                            <p>Venta evoluciona a otro repo cuando su ciclo de despliegue requiere autonomia.</p>
+                        </article>
+                        <article class="scenario-card">
+                            <h4>Escenario 3</h4>
+                            <p>Inventario se independiza cuando necesita tecnologia, equipo o versionado propio.</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="tab-panel" id="tab-micro" role="tabpanel" aria-labelledby="btn-micro" hidden>
+                    <h2>Separacion a microservicios: cada dominio obtiene repo, runtime y despliegue propio</h2>
+                    <p>
+                        La demo representa la salida natural desde by module hacia varios repos.
+                        Cada repositorio mantiene las ramas <strong>develop</strong>, <strong>qa</strong> y
+                        <strong>main</strong>, pero ahora cada dominio se despliega por separado.
+                    </p>
+                    <div class="micro-grid">
+                        <article class="micro-card">
+                            <h3>repo: micro-1</h3>
+                            <p><strong>Stack:</strong> Spring Boot</p>
+                            <p><strong>Dominio:</strong> Seguridad</p>
+                        </article>
+                        <article class="micro-card">
+                            <h3>repo: micro-2</h3>
+                            <p><strong>Stack:</strong> Node</p>
+                            <p><strong>Dominio:</strong> Venta</p>
+                        </article>
+                        <article class="micro-card">
+                            <h3>repo: micro-3</h3>
+                            <p><strong>Stack:</strong> Python</p>
+                            <p><strong>Dominio:</strong> Inventario</p>
+                        </article>
+                        <article class="micro-card">
+                            <h3>repo: api-gateway</h3>
+                            <p><strong>Rol:</strong> entrada unica</p>
+                            <p><strong>Funcion:</strong> enrutar por ambiente</p>
+                        </article>
+                        <article class="micro-card">
+                            <h3>repo: front</h3>
+                            <p><strong>Rol:</strong> capa de presentacion</p>
+                            <p><strong>Funcion:</strong> explicar y navegar la arquitectura</p>
+                        </article>
+                        <article class="micro-card">
+                            <h3>repo: base-dato</h3>
+                            <p><strong>Rol:</strong> persistencia</p>
+                            <p><strong>Funcion:</strong> representar el repositorio de datos por ambiente</p>
+                        </article>
+                    </div>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Escenario</th>
+                                <th>Que gana el equipo</th>
+                                <th>Nuevo costo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Repos separados por dominio</td>
+                                <td>Versionado, despliegue y ownership mas claro.</td>
+                                <td>Mas coordinacion y mas infraestructura.</td>
+                            </tr>
+                            <tr>
+                                <td>Tecnologias distintas</td>
+                                <td>Cada dominio usa el stack que le conviene.</td>
+                                <td>Se complica la observabilidad y la operacion.</td>
+                            </tr>
+                            <tr>
+                                <td>Gateway al frente</td>
+                                <td>El front no necesita conocer todos los servicios internos.</td>
+                                <td>El gateway se vuelve un punto importante de control.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="tab-panel" id="tab-gateway" role="tabpanel" aria-labelledby="btn-gateway" hidden>
+                    <h2>API Gateway: una sola puerta de entrada para todos los ambientes</h2>
+                    <p>
+                        El gateway concentra autenticacion externa, normaliza rutas y dirige las peticiones al microservicio
+                        correcto del mismo ambiente. No mezcla main con qa ni dev.
+                    </p>
+                    <div class="gateway-diagram">
+                        <div class="gateway-tier">
+                            <div class="gateway-node front-node">
+                                <span class="node-title">Front</span>
+                                <span class="node-meta">80 | 81 | 82</span>
+                            </div>
+                            <div class="gateway-arrow">solicitudes</div>
+                            <div class="gateway-node gateway-node-main">
+                                <span class="node-title">API Gateway</span>
+                                <span class="node-meta">8000 | 8001 | 8002</span>
+                            </div>
+                        </div>
+                        <div class="gateway-tier branch-tier">
+                            <div class="gateway-node service-node">
+                                <span class="node-title">micro-1</span>
+                                <span class="node-meta">Seguridad</span>
+                                <span class="node-meta">8080 | 8081 | 8082</span>
+                            </div>
+                            <div class="gateway-node service-node">
+                                <span class="node-title">micro-2</span>
+                                <span class="node-meta">Venta</span>
+                                <span class="node-meta">9000 | 9001 | 9002</span>
+                            </div>
+                            <div class="gateway-node service-node">
+                                <span class="node-title">micro-3</span>
+                                <span class="node-meta">Inventario</span>
+                                <span class="node-meta">8888 | 8889 | 8890</span>
+                            </div>
+                        </div>
+                        <div class="gateway-tier">
+                            <div class="gateway-node db-node">
+                                <span class="node-title">base-dato</span>
+                                <span class="node-meta">5432 | 5433 | 5434</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comparison-cards">
+                        <article class="comparison-card">
+                            <h4>Lectura visual correcta</h4>
+                            <p>
+                                Front main debe conversar con gateway main y este con los micros de main.
+                                Lo mismo aplica para qa y dev. Cada ambiente es una linea aislada.
+                            </p>
+                        </article>
+                        <article class="comparison-card">
+                            <h4>Que se busca enseñar</h4>
+                            <p>
+                                El gateway no reemplaza a DDD. Solo ordena el acceso. La separacion real
+                                del negocio sigue estando en Seguridad, Venta e Inventario.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="tab-panel" id="tab-ports" role="tabpanel" aria-labelledby="btn-ports" hidden>
+                    <h2>Mapa de puertos y accesos rapidos</h2>
+                    <p>
+                        Cada repo mantiene sus tres ambientes. Esta pagina te deja enlaces directos para abrir cada
+                        contenedor y verificar visualmente donde estas parado.
+                    </p>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Repo</th>
+                                <th>Main</th>
+                                <th>QA</th>
+                                <th>Dev</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>front</td><td>80</td><td>81</td><td>82</td></tr>
+                            <tr><td>api-gateway</td><td>8000</td><td>8001</td><td>8002</td></tr>
+                            <tr><td>micro-1 (Spring Boot)</td><td>8080</td><td>8081</td><td>8082</td></tr>
+                            <tr><td>micro-2 (Node)</td><td>9000</td><td>9001</td><td>9002</td></tr>
+                            <tr><td>micro-3 (Python)</td><td>8888</td><td>8889</td><td>8890</td></tr>
+                            <tr><td>base-dato</td><td>5432</td><td>5433</td><td>5434</td></tr>
+                        </tbody>
+                    </table>
+                    <div id="accesos" class="quick-links-grid"></div>
+                    <div class="warning-box">
+                        <h4>Nota importante</h4>
+                        <p>
+                            En esta demo, los puertos 5432, 5433 y 5434 muestran una pagina HTML para representar el repo
+                            de base de datos. No ejecutan PostgreSQL real. La idea es pedagogica: visualizar ambientes
+                            y ownership de forma inmediata.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="tab-panel" id="tab-kubernetes" role="tabpanel" aria-labelledby="btn-kubernetes" hidden>
+                    <h2>Kubernetes: como llevar estos escenarios a un cluster real</h2>
+                    <p>
+                        Kubernetes no cambia el dominio; cambia la forma de operar. El mapa mas claro para esta clase
+                        es separar por namespaces de ambiente y desplegar dentro de cada namespace el front, gateway y
+                        microservicios del mismo entorno.
+                    </p>
+                    <div class="namespace-grid">
+                        <article class="namespace-card">
+                            <h3>namespace: distribuidos-dev</h3>
+                            <p>front-dev, gateway-dev, micro-1-dev, micro-2-dev, micro-3-dev</p>
+                        </article>
+                        <article class="namespace-card">
+                            <h3>namespace: distribuidos-qa</h3>
+                            <p>front-qa, gateway-qa, micro-1-qa, micro-2-qa, micro-3-qa</p>
+                        </article>
+                        <article class="namespace-card">
+                            <h3>namespace: distribuidos-main</h3>
+                            <p>front-main, gateway-main, micro-1-main, micro-2-main, micro-3-main</p>
+                        </article>
+                    </div>
+                    <div class="comparison-cards">
+                        <article class="comparison-card">
+                            <h4>Recursos minimos</h4>
+                            <ul>
+                                <li>Namespace por ambiente.</li>
+                                <li>Deployment por servicio.</li>
+                                <li>Service ClusterIP para trafico interno.</li>
+                                <li>Ingress para exposicion externa.</li>
+                                <li>ConfigMap y Secret para configuracion.</li>
+                            </ul>
+                        </article>
+                        <article class="comparison-card">
+                            <h4>Buenas practicas</h4>
+                            <ul>
+                                <li>No mezclar trafico entre ambientes.</li>
+                                <li>Versionar manifests o Helm charts por repo.</li>
+                                <li>Centralizar observabilidad y logs.</li>
+                                <li>Escalar microservicios de forma independiente.</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="code-box">
+                        <h4>Ejemplo de lectura operacional</h4>
+                        <pre><code>Usuario -> Ingress -> front-main
+Usuario -> Ingress -> api-gateway-main
+api-gateway-main -> Service micro-1-main
+api-gateway-main -> Service micro-2-main
+api-gateway-main -> Service micro-3-main</code></pre>
+                    </div>
+                    <div class="reflection-box">
+                        <h4>Documentacion adicional</h4>
+                        <p>
+                            Esta sesion incluye una guia dedicada en <strong>k8s/README.md</strong> y un manifiesto
+                            de referencia en <strong>k8s/reference-architecture.yaml</strong>.
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>Material docente para Arquitectura, DDD, ADR, API Gateway y Kubernetes.</p>
+            <p>Ingenieria de Sistemas - CORHUILA</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

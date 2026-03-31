@@ -1,0 +1,329 @@
+name: ddd-architecture-demo
+
+x-placeholder-service: &placeholder-service
+  build:
+    context: ./infra/pedagogic-service
+  restart: unless-stopped
+  networks:
+    - ddd-demo
+
+x-front-service: &front-service
+  image: nginx:alpine
+  restart: unless-stopped
+  volumes:
+    - ./index.html:/usr/share/nginx/html/index.html:ro
+    - ./css:/usr/share/nginx/html/css:ro
+    - ./js:/usr/share/nginx/html/js:ro
+    - ./README.md:/usr/share/nginx/html/README.md:ro
+    - ./docs:/usr/share/nginx/html/docs:ro
+    - ./k8s:/usr/share/nginx/html/k8s:ro
+  networks:
+    - ddd-demo
+
+services:
+  front-main:
+    <<: *front-service
+    container_name: ddd-front-main
+    ports:
+      - "80:80"
+
+  front-qa:
+    <<: *front-service
+    container_name: ddd-front-qa
+    ports:
+      - "81:80"
+
+  front-dev:
+    <<: *front-service
+    container_name: ddd-front-dev
+    ports:
+      - "82:80"
+
+  api-gateway-main:
+    <<: *placeholder-service
+    container_name: ddd-api-gateway-main
+    ports:
+      - "8000:80"
+    environment:
+      SERVICE_NAME: API Gateway
+      REPOSITORY_NAME: api-gateway
+      ENVIRONMENT_NAME: main
+      HOST_PORT: "8000"
+      TECHNOLOGY_NAME: Punto unico de entrada
+      ROLE_NAME: Enrutamiento y coordinacion
+      SCENARIO_NAME: Microservicios separados por ambiente con una puerta de acceso comun.
+      MODULE_SCOPE: Seguridad, Venta e Inventario del ambiente main.
+      SUMMARY_TEXT: Aqui corre la representacion del gateway del ambiente main.
+      EXTRA_NOTE: Debe recibir trafico del front-main y redirigirlo solo a micro-1-main, micro-2-main y micro-3-main.
+      PORT_FAMILY: main 8000 | qa 8001 | dev 8002
+      FRONT_PORT: "80"
+
+  api-gateway-qa:
+    <<: *placeholder-service
+    container_name: ddd-api-gateway-qa
+    ports:
+      - "8001:80"
+    environment:
+      SERVICE_NAME: API Gateway
+      REPOSITORY_NAME: api-gateway
+      ENVIRONMENT_NAME: qa
+      HOST_PORT: "8001"
+      TECHNOLOGY_NAME: Punto unico de entrada
+      ROLE_NAME: Enrutamiento y coordinacion
+      SCENARIO_NAME: Microservicios separados por ambiente con una puerta de acceso comun.
+      MODULE_SCOPE: Seguridad, Venta e Inventario del ambiente qa.
+      SUMMARY_TEXT: Aqui corre la representacion del gateway del ambiente qa.
+      EXTRA_NOTE: Debe recibir trafico del front-qa y redirigirlo solo a micro-1-qa, micro-2-qa y micro-3-qa.
+      PORT_FAMILY: main 8000 | qa 8001 | dev 8002
+      FRONT_PORT: "81"
+
+  api-gateway-dev:
+    <<: *placeholder-service
+    container_name: ddd-api-gateway-dev
+    ports:
+      - "8002:80"
+    environment:
+      SERVICE_NAME: API Gateway
+      REPOSITORY_NAME: api-gateway
+      ENVIRONMENT_NAME: dev
+      HOST_PORT: "8002"
+      TECHNOLOGY_NAME: Punto unico de entrada
+      ROLE_NAME: Enrutamiento y coordinacion
+      SCENARIO_NAME: Microservicios separados por ambiente con una puerta de acceso comun.
+      MODULE_SCOPE: Seguridad, Venta e Inventario del ambiente dev.
+      SUMMARY_TEXT: Aqui corre la representacion del gateway del ambiente dev.
+      EXTRA_NOTE: Debe recibir trafico del front-dev y redirigirlo solo a micro-1-dev, micro-2-dev y micro-3-dev.
+      PORT_FAMILY: main 8000 | qa 8001 | dev 8002
+      FRONT_PORT: "82"
+
+  micro-1-main:
+    <<: *placeholder-service
+    container_name: ddd-micro-1-main
+    ports:
+      - "8080:80"
+    environment:
+      SERVICE_NAME: micro-1
+      REPOSITORY_NAME: micro-1
+      ENVIRONMENT_NAME: main
+      HOST_PORT: "8080"
+      TECHNOLOGY_NAME: Spring Boot
+      ROLE_NAME: Dominio Seguridad
+      SCENARIO_NAME: Microservicio dedicado al bounded context Seguridad.
+      MODULE_SCOPE: Usuarios, roles, permisos y JWT.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Seguridad en ambiente main.
+      EXTRA_NOTE: Este puerto solo muestra identidad del servicio; no expone endpoints reales.
+      PORT_FAMILY: main 8080 | qa 8081 | dev 8082
+      FRONT_PORT: "80"
+
+  micro-1-qa:
+    <<: *placeholder-service
+    container_name: ddd-micro-1-qa
+    ports:
+      - "8081:80"
+    environment:
+      SERVICE_NAME: micro-1
+      REPOSITORY_NAME: micro-1
+      ENVIRONMENT_NAME: qa
+      HOST_PORT: "8081"
+      TECHNOLOGY_NAME: Spring Boot
+      ROLE_NAME: Dominio Seguridad
+      SCENARIO_NAME: Microservicio dedicado al bounded context Seguridad.
+      MODULE_SCOPE: Usuarios, roles, permisos y JWT.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Seguridad en ambiente qa.
+      EXTRA_NOTE: Este puerto solo muestra identidad del servicio; no expone endpoints reales.
+      PORT_FAMILY: main 8080 | qa 8081 | dev 8082
+      FRONT_PORT: "81"
+
+  micro-1-dev:
+    <<: *placeholder-service
+    container_name: ddd-micro-1-dev
+    ports:
+      - "8082:80"
+    environment:
+      SERVICE_NAME: micro-1
+      REPOSITORY_NAME: micro-1
+      ENVIRONMENT_NAME: dev
+      HOST_PORT: "8082"
+      TECHNOLOGY_NAME: Spring Boot
+      ROLE_NAME: Dominio Seguridad
+      SCENARIO_NAME: Microservicio dedicado al bounded context Seguridad.
+      MODULE_SCOPE: Usuarios, roles, permisos y JWT.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Seguridad en ambiente dev.
+      EXTRA_NOTE: Este puerto solo muestra identidad del servicio; no expone endpoints reales.
+      PORT_FAMILY: main 8080 | qa 8081 | dev 8082
+      FRONT_PORT: "82"
+
+  micro-2-main:
+    <<: *placeholder-service
+    container_name: ddd-micro-2-main
+    ports:
+      - "9000:80"
+    environment:
+      SERVICE_NAME: micro-2
+      REPOSITORY_NAME: micro-2
+      ENVIRONMENT_NAME: main
+      HOST_PORT: "9000"
+      TECHNOLOGY_NAME: Node
+      ROLE_NAME: Dominio Venta
+      SCENARIO_NAME: Microservicio dedicado al bounded context Venta.
+      MODULE_SCOPE: Pedidos, pagos, reglas comerciales y estados.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Venta en ambiente main.
+      EXTRA_NOTE: La idea es identificar rapido que este puerto pertenece al repo micro-2.
+      PORT_FAMILY: main 9000 | qa 9001 | dev 9002
+      FRONT_PORT: "80"
+
+  micro-2-qa:
+    <<: *placeholder-service
+    container_name: ddd-micro-2-qa
+    ports:
+      - "9001:80"
+    environment:
+      SERVICE_NAME: micro-2
+      REPOSITORY_NAME: micro-2
+      ENVIRONMENT_NAME: qa
+      HOST_PORT: "9001"
+      TECHNOLOGY_NAME: Node
+      ROLE_NAME: Dominio Venta
+      SCENARIO_NAME: Microservicio dedicado al bounded context Venta.
+      MODULE_SCOPE: Pedidos, pagos, reglas comerciales y estados.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Venta en ambiente qa.
+      EXTRA_NOTE: La idea es identificar rapido que este puerto pertenece al repo micro-2.
+      PORT_FAMILY: main 9000 | qa 9001 | dev 9002
+      FRONT_PORT: "81"
+
+  micro-2-dev:
+    <<: *placeholder-service
+    container_name: ddd-micro-2-dev
+    ports:
+      - "9002:80"
+    environment:
+      SERVICE_NAME: micro-2
+      REPOSITORY_NAME: micro-2
+      ENVIRONMENT_NAME: dev
+      HOST_PORT: "9002"
+      TECHNOLOGY_NAME: Node
+      ROLE_NAME: Dominio Venta
+      SCENARIO_NAME: Microservicio dedicado al bounded context Venta.
+      MODULE_SCOPE: Pedidos, pagos, reglas comerciales y estados.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Venta en ambiente dev.
+      EXTRA_NOTE: La idea es identificar rapido que este puerto pertenece al repo micro-2.
+      PORT_FAMILY: main 9000 | qa 9001 | dev 9002
+      FRONT_PORT: "82"
+
+  micro-3-main:
+    <<: *placeholder-service
+    container_name: ddd-micro-3-main
+    ports:
+      - "8888:80"
+    environment:
+      SERVICE_NAME: micro-3
+      REPOSITORY_NAME: micro-3
+      ENVIRONMENT_NAME: main
+      HOST_PORT: "8888"
+      TECHNOLOGY_NAME: Python
+      ROLE_NAME: Dominio Inventario
+      SCENARIO_NAME: Microservicio dedicado al bounded context Inventario.
+      MODULE_SCOPE: Stock, catalogo, movimientos y disponibilidad.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Inventario en ambiente main.
+      EXTRA_NOTE: Se usa como apoyo visual para mostrar separacion tecnologica y ownership.
+      PORT_FAMILY: main 8888 | qa 8889 | dev 8890
+      FRONT_PORT: "80"
+
+  micro-3-qa:
+    <<: *placeholder-service
+    container_name: ddd-micro-3-qa
+    ports:
+      - "8889:80"
+    environment:
+      SERVICE_NAME: micro-3
+      REPOSITORY_NAME: micro-3
+      ENVIRONMENT_NAME: qa
+      HOST_PORT: "8889"
+      TECHNOLOGY_NAME: Python
+      ROLE_NAME: Dominio Inventario
+      SCENARIO_NAME: Microservicio dedicado al bounded context Inventario.
+      MODULE_SCOPE: Stock, catalogo, movimientos y disponibilidad.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Inventario en ambiente qa.
+      EXTRA_NOTE: Se usa como apoyo visual para mostrar separacion tecnologica y ownership.
+      PORT_FAMILY: main 8888 | qa 8889 | dev 8890
+      FRONT_PORT: "81"
+
+  micro-3-dev:
+    <<: *placeholder-service
+    container_name: ddd-micro-3-dev
+    ports:
+      - "8890:80"
+    environment:
+      SERVICE_NAME: micro-3
+      REPOSITORY_NAME: micro-3
+      ENVIRONMENT_NAME: dev
+      HOST_PORT: "8890"
+      TECHNOLOGY_NAME: Python
+      ROLE_NAME: Dominio Inventario
+      SCENARIO_NAME: Microservicio dedicado al bounded context Inventario.
+      MODULE_SCOPE: Stock, catalogo, movimientos y disponibilidad.
+      SUMMARY_TEXT: Aqui corre la representacion del servicio Inventario en ambiente dev.
+      EXTRA_NOTE: Se usa como apoyo visual para mostrar separacion tecnologica y ownership.
+      PORT_FAMILY: main 8888 | qa 8889 | dev 8890
+      FRONT_PORT: "82"
+
+  base-dato-main:
+    <<: *placeholder-service
+    container_name: ddd-base-dato-main
+    ports:
+      - "5432:80"
+    environment:
+      SERVICE_NAME: base-dato
+      REPOSITORY_NAME: base-dato
+      ENVIRONMENT_NAME: main
+      HOST_PORT: "5432"
+      TECHNOLOGY_NAME: Representacion visual del repositorio de datos
+      ROLE_NAME: Persistencia compartida
+      SCENARIO_NAME: Repo separado para la capa de datos con tres ambientes consistentes.
+      MODULE_SCOPE: Apoya Seguridad, Venta e Inventario sin exponer una base real.
+      SUMMARY_TEXT: Aqui corre la representacion visual de base-dato en ambiente main.
+      EXTRA_NOTE: Se usa HTML para que el puerto se pueda abrir en navegador y sirva como apoyo didactico.
+      PORT_FAMILY: main 5432 | qa 5433 | dev 5434
+      FRONT_PORT: "80"
+
+  base-dato-qa:
+    <<: *placeholder-service
+    container_name: ddd-base-dato-qa
+    ports:
+      - "5433:80"
+    environment:
+      SERVICE_NAME: base-dato
+      REPOSITORY_NAME: base-dato
+      ENVIRONMENT_NAME: qa
+      HOST_PORT: "5433"
+      TECHNOLOGY_NAME: Representacion visual del repositorio de datos
+      ROLE_NAME: Persistencia compartida
+      SCENARIO_NAME: Repo separado para la capa de datos con tres ambientes consistentes.
+      MODULE_SCOPE: Apoya Seguridad, Venta e Inventario sin exponer una base real.
+      SUMMARY_TEXT: Aqui corre la representacion visual de base-dato en ambiente qa.
+      EXTRA_NOTE: Se usa HTML para que el puerto se pueda abrir en navegador y sirva como apoyo didactico.
+      PORT_FAMILY: main 5432 | qa 5433 | dev 5434
+      FRONT_PORT: "81"
+
+  base-dato-dev:
+    <<: *placeholder-service
+    container_name: ddd-base-dato-dev
+    ports:
+      - "5434:80"
+    environment:
+      SERVICE_NAME: base-dato
+      REPOSITORY_NAME: base-dato
+      ENVIRONMENT_NAME: dev
+      HOST_PORT: "5434"
+      TECHNOLOGY_NAME: Representacion visual del repositorio de datos
+      ROLE_NAME: Persistencia compartida
+      SCENARIO_NAME: Repo separado para la capa de datos con tres ambientes consistentes.
+      MODULE_SCOPE: Apoya Seguridad, Venta e Inventario sin exponer una base real.
+      SUMMARY_TEXT: Aqui corre la representacion visual de base-dato en ambiente dev.
+      EXTRA_NOTE: Este puerto ya esta ocupado por otro contenedor en tu maquina. Solo levantalo si liberas 5434.
+      PORT_FAMILY: main 5432 | qa 5433 | dev 5434
+      FRONT_PORT: "82"
+
+networks:
+  ddd-demo:
+    driver: bridge

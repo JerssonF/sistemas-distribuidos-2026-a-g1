@@ -1,0 +1,217 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: distribuidos-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: distribuidos-qa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: distribuidos-main
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-routing
+  namespace: distribuidos-main
+data:
+  MICRO_1_URL: http://micro-1
+  MICRO_2_URL: http://micro-2
+  MICRO_3_URL: http://micro-3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: distribuidos-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: demo/front:main
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+  namespace: distribuidos-main
+spec:
+  selector:
+    app: front
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: distribuidos-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: demo/api-gateway:main
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: gateway-routing
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  namespace: distribuidos-main
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-1
+  namespace: distribuidos-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-1
+  template:
+    metadata:
+      labels:
+        app: micro-1
+    spec:
+      containers:
+        - name: micro-1
+          image: demo/micro-1:main
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-1
+  namespace: distribuidos-main
+spec:
+  selector:
+    app: micro-1
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-2
+  namespace: distribuidos-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-2
+  template:
+    metadata:
+      labels:
+        app: micro-2
+    spec:
+      containers:
+        - name: micro-2
+          image: demo/micro-2:main
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-2
+  namespace: distribuidos-main
+spec:
+  selector:
+    app: micro-2
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-3
+  namespace: distribuidos-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-3
+  template:
+    metadata:
+      labels:
+        app: micro-3
+    spec:
+      containers:
+        - name: micro-3
+          image: demo/micro-3:main
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-3
+  namespace: distribuidos-main
+spec:
+  selector:
+    app: micro-3
+  ports:
+    - port: 80
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: distribuidos-ingress
+  namespace: distribuidos-main
+spec:
+  rules:
+    - host: demo-main.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: front
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 80
