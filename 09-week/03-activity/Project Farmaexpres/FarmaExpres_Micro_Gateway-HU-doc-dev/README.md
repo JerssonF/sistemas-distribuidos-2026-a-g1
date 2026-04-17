@@ -1,1 +1,0 @@
-# FarmaExpres_Micro_Gateway
